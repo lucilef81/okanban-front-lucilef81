@@ -107,7 +107,16 @@ var app = {
   },
 
   makeCardInDOM: (cardTitle, listId) => {
-    console.log(`On s'apprète à insérer une carte nommée ${cardTitle} dans la liste d'id ${listId}`);
+    // récupérer le template
+    let template = document.getElementById('template-card');
+    // créer une nouvelle copie
+    let newCard = document.importNode(template.content, true);
+    // changer les valeurs qui vont bien
+    newCard.querySelector('.card-name').textContent = cardTitle;
+
+    // insérer la nouvelle carte dans la bonne liste
+    let theGoodList = document.querySelector(`[list-id="${listId}"]`);
+    theGoodList.querySelector('.panel-block').appendChild(newCard);
   }
 
 };
