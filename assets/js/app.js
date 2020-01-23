@@ -18,10 +18,34 @@ var app = {
 
     let addListForm = document.querySelector('#addListModal form');
     addListForm.addEventListener('submit', app.handleAddListForm);
+
+    let addCardButtons = document.querySelectorAll('.add-card-button');
+    for (let button of addCardButtons) {
+      button.addEventListener('click', app.showAddCardModal);
+    };
+
+    let addCardForm = document.querySelector("#addCardModal form");
+    addCardForm.addEventListener('submit', app.handleAddCardForm);
   },
 
   showAddListModal: () => {
     let modal = document.getElementById('addListModal');
+    modal.classList.add('is-active');
+  },
+
+  showAddCardModal: (event) => {
+    // on récupère le bouton cliqué
+    let clickedButton = event.target;
+
+    let modal = document.getElementById('addCardModal');
+
+    // pour en déduire l'id de la liste à laquelle on ajoute une carte
+    let listId = clickedButton.closest('.panel').dataset.listId;
+
+    let listIdInput = modal.querySelector('input[name="list_id"]');
+
+    listIdInput.value = listId;
+
     modal.classList.add('is-active');
   },
 
@@ -50,6 +74,16 @@ var app = {
     app.hideModals();
   },
 
+  handleAddCardForm: (event) => {
+    event.preventDefault();
+
+    let data = new FormData(event.target);
+
+    app.makeCardInDOM(data.get('title'), data.get('list_id'));
+
+    app.hideModals();
+  },
+
   makeListInDOM: (listName) => {
     // on va chercher notre template dans le DOM
     let template = document.querySelector('#tpl-list');
@@ -58,12 +92,22 @@ var app = {
 
     newList.querySelector('h2').textContent = listName;
 
+    newList.querySelector('.add-card-button').addEventListener('click', app.showAddCardModal);
+
+    // à terme, l'API se chargera d'attribuer un id à une nouvelle liste
+    // pour l'instant, on va prendre une valeur aléatoire
+    newList.querySelector('.panel').dataset.listId = Math.random();
+
     // insertion dans le document de cette nouvelle liste
     // 1. trouver un repère pour l'insertion
     let lastColumn = document.getElementById('addListButton').closest('.column');
 
     // 2. insérer le nouvel élément par rapport à ce repère
     lastColumn.before(newList);
+  },
+
+  makeCardInDOM: (cardTitle, listId) => {
+    console.log(`On s'apprète à insérer une carte nommée ${cardTitle} dans la liste d'id ${listId}`);
   }
 
 };

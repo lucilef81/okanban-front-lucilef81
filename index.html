@@ -18,7 +18,7 @@
             </h1>
             <div class="columns">
                 <!-- list -->
-                <div class="column is-one-quarter panel" list-id="A">
+                <div class="column is-one-quarter panel" data-list-id="A">
                     <div class="panel-heading has-background-info">
                         <div class="columns">
                             <div class="column">
@@ -38,7 +38,7 @@
                             </div>
 
                             <div class="column is-narrow">
-                                <a href="#" class="is-pulled-right">
+                                <a href="#" class="is-pulled-right add-card-button">
                                     <span class="icon is-small has-text-white">
                                         <i class="fas fa-plus"></i>
                                     </span>
@@ -73,7 +73,7 @@
                 <!--/ list -->
 
                 <!-- list -->
-                <div class="column is-one-quarter panel" list-id="B">
+                <div class="column is-one-quarter panel" data-list-id="B">
                     <div class="panel-heading has-background-info">
                         <div class="columns">
                             <div class="column">
@@ -93,7 +93,7 @@
                             </div>
                     
                             <div class="column is-narrow">
-                                <a href="#" class="is-pulled-right">
+                                <a href="#" class="is-pulled-right add-card-button">
                                     <span class="icon is-small has-text-white">
                                         <i class="fas fa-plus"></i>
                                     </span>
@@ -208,6 +208,7 @@
         </div>
     </section>
 
+    <!-- modale ajout de liste -->
     <div class="modal" id="addListModal">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -222,6 +223,32 @@
                         <div class="control">
                             <input type="text" class="input" name="name" value="" placeholder="Nom de la liste">
                         </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Save changes</button>
+                    <button class="button close" type="button">Cancel</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- modale ajout de carte -->
+    <div class="modal" id="addCardModal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <form action="" method="POST">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Ajouter une carte</p>
+                    <button class="delete close" type="button" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Titre</label>
+                        <div class="control">
+                            <input type="text" class="input" name="title" value="" placeholder="Titre de la carte">
+                        </div>
+                        <input type="hidden" name="list_id">
                     </div>
                 </section>
                 <footer class="modal-card-foot">
@@ -259,7 +286,7 @@
                     </div>
 
                     <div class="column is-narrow">
-                        <a href="#" class="is-pulled-right">
+                        <a href="#" class="is-pulled-right add-card-button">
                             <span class="icon is-small has-text-white">
                                 <i class="fas fa-plus"></i>
                             </span>
@@ -270,6 +297,28 @@
             <div class="panel-block is-block has-background-light"></div>
         </div>
         <!--/ list -->
+    </template>
+
+    <template id="tpl-card">
+        <!-- card -->
+        <div class="box">
+            <div class="columns">
+                <div class="column"></div>
+                <div class="column is-narrow">
+                    <a href="#">
+                        <span class="icon is-small has-text-primary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </span>
+                    </a>
+                    <a href="#">
+                        <span class="icon is-small has-text-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--/ card -->
     </template>
 </body>
 
