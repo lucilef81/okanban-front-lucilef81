@@ -51,7 +51,19 @@ var app = {
   },
 
   makeListInDOM: (listName) => {
-    console.log('Ici, dans le turfu, on créera une liste qui s\'appelle ' + listName);
+    // on va chercher notre template dans le DOM
+    let template = document.querySelector('#tpl-list');
+    // cette méthode permet de créer une copie du contenu du template
+    let newList = document.importNode(template.content, true);
+
+    newList.querySelector('h2').textContent = listName;
+
+    // insertion dans le document de cette nouvelle liste
+    // 1. trouver un repère pour l'insertion
+    let lastColumn = document.getElementById('addListButton').closest('.column');
+
+    // 2. insérer le nouvel élément par rapport à ce repère
+    lastColumn.before(newList);
   }
 
 };
