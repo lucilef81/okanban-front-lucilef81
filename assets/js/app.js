@@ -2,9 +2,32 @@
 // on objet qui contient des fonctions
 var app = {
 
+  baseUrl: 'http://localhost:3000',
+
   // fonction d'initialisation, lancée au chargement de la page
   init: function () {
     app.addListenersToActions();
+
+    app.getListsFromAPI();
+  },
+
+  getListsFromAPI: async () => {
+    try {
+      let response = await fetch(app.baseUrl + '/lists');
+      let lists = await response.json();
+      console.log(lists);
+      for (let list of lists) {
+        // chaque liste sera un objet JS avec un propriété name, une autre position, un id etc.
+        app.makeListInDOM(list.name, list.id);
+
+        for (let card of list.cards) {
+          // makeCardInDOM accepte 4 paramètres, il faut donc lui passer 4 arguments
+          app.makeCardInDOM(card.title, list.id, card.id, card.color);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   addListenersToActions: () => {
@@ -84,7 +107,7 @@ var app = {
     app.hideModals();
   },
 
-  makeListInDOM: (listName) => {
+  makeListInDOM: (listName, listId) => {
     // on va chercher notre template dans le DOM
     let template = document.querySelector('#tpl-list');
     // cette méthode permet de créer une copie du contenu du template
@@ -96,7 +119,7 @@ var app = {
 
     // à terme, l'API se chargera d'attribuer un id à une nouvelle liste
     // pour l'instant, on va prendre une valeur aléatoire
-    newList.querySelector('.panel').dataset.listId = Math.random();
+    newList.querySelector('.panel').dataset.listId = listId;
 
     // insertion dans le document de cette nouvelle liste
     // 1. trouver un repère pour l'insertion
@@ -106,13 +129,21 @@ var app = {
     lastColumn.before(newList);
   },
 
-  makeCardInDOM: (cardTitle, listId) => {
+  makeCardInDOM: (cardTitle, listId, cardId, cardColor = null) => {
     // récupérer le template
     let template = document.getElementById('tpl-card');
     // créer une nouvelle copie
     let newCard = document.importNode(template.content, true);
     // changer les valeurs qui vont bien
     newCard.querySelector('.card-name').textContent = cardTitle;
+
+    // les cartes auront maintenant un id
+    newCard.querySelector('.box').dataset.cardId = cardId;
+
+    // il faut aussi leur appliquer une couleur
+    if (cardColor) {
+      newCard.querySelector('.box').style.backgroundColor = `#${cardColor.toString(16)}`;
+    }
 
     // insérer la nouvelle carte dans la bonne liste
     let theGoodList = document.querySelector(`[data-list-id="${listId}"]`);
