@@ -79,21 +79,36 @@ var app = {
     }
   },
 
-  handleAddListForm: (event) => {
+  handleAddListForm: async (event) => {
     // empêcher d'envoyer vraiment le formulaire (ça rechargerait la page)
     event.preventDefault();
 
     let data = new FormData(event.target);
+    data.set('position', 99);
 
-    // ici, pour l'instant, on ne fait rien
-    // mais bientôt, on appellera notre API pour enregistrer la nouvelle liste
+    // on utilise toujours fetch, quelle que soit la méthode
+    let response = await fetch(app.baseUrl + '/lists', {
+      method: 'POST', // par contre, si c'est autre chose que GET, on le précise
+      body: data // et s'il y a des données à envoyer (cas d'une création ou d'une mise à jour), faut le préciser aussi
+      // et c'est tout, on ne met pas d'options qui ne servent pas
+    });
 
-    // on la codera plus tard mais on l'appelle tout de suite
-    // cette méthode va créer une nouvelle liste
-    // et pour pouvoir créer une nouvelle liste, il lui faut un nom
-    // ça tombe bien, on vient d'en saisir un dans le formulaire
-    app.makeListInDOM(data.get('name'));
+    // RAPPEL : fetch ne retourne pas les données, il retourne un objet Response
+    // sur cet objet, on trouve les propriétés status et ok
+    // ainsi que plusieurs méthodes pour accéder au corps de la réponse, dont .json() qu'on va privilégier ici
+    if (response.status === 200) {
+      // attention, .json() ne retourne pas les données directement, mais une promesse ;-)
+      let list = await response.json(); // pas grave, on l'await
+      app.makeListInDOM(list.name, list.id); // et puisque tout s'est bien passé et qu'on a nos données, on met à jour le DOM
+    } else { // cas typique : statut 400, il manque des infos
+      let errors = await response.json(); // l'API qu'on a codée retourne un tableau d'erreurs compréhensibles pour un humain
+      for (let error of errors) {
+        alert(error); // on s'embête pas, on lui affiche
+      }
+    }
 
+    // c'est discutable de mettre ça ici, on pourrait ne cacher la modale que si tout s'est bien passé
+    // faîtes comme vous voulez, c'est pas crucial non plus
     app.hideModals();
   },
 
