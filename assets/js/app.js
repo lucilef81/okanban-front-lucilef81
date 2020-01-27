@@ -129,6 +129,52 @@ var app = {
     listElement.querySelector('h2').classList.remove('is-hidden');
   },
 
+  // afficher le formulaire d'edition du titre d'une carte
+  showEditCardForm: (event) => {
+    // récupérer tous les éléments
+    let cardElement = event.target.closest('.box');
+    let formElement = cardElement.querySelector('form');
+    let titleElement = cardElement.querySelector('.card-name');
+
+    // mettre la valeur existante dans l'input
+    formElement.querySelector('input[name="title"]').value = titleElement.textContent;
+
+    // afficher/masquer
+    titleElement.classList.add('is-hidden');
+    formElement.classList.remove('is-hidden');
+  },
+
+  handleEditCardForm: async (event) => {
+    event.preventDefault();
+
+    // récupérer les données
+    let data = new FormData(event.target);
+    // récupérer l'id de la liste
+    let cardElement = event.target.closest('.box');
+    const cardId = cardElement.dataset.cardId;
+    //appeler l'API
+    try {
+      let response = await fetch(app.baseUrl+'/cards/'+cardId,{
+        method: "PATCH",
+        body: data
+      });
+      if (response.status !== 200) {
+        let error = await response.json();
+        throw error;
+      } else {
+        let card = await response.json();
+        // on met à jour le h2
+        cardElement.querySelector('.card-name').textContent = card.title;
+      }
+    } catch (error) {
+      alert("Impossible de modifier la carte");
+      console.error(error);
+    }
+    // quoi qu'il se passe, on cache le formulaire
+    event.target.classList.add('is-hidden');
+    // et on réaffiche le title
+    cardElement.querySelector('.card-name').classList.remove('is-hidden');
+  },
 
   handleAddListForm: async (event) => {
     // empêcher d'envoyer vraiment le formulaire (ça rechargerait la page)
@@ -232,6 +278,9 @@ var app = {
     if (cardColor) {
       newCard.querySelector('.box').style.backgroundColor = `#${cardColor.toString(16)}`;
     }
+
+    newCard.querySelector('.edit-card').addEventListener('click', app.showEditCardForm);
+    newCard.querySelector('form').addEventListener('submit', app.handleEditCardForm);
 
     // insérer la nouvelle carte dans la bonne liste
     let theGoodList = document.querySelector(`[data-list-id="${listId}"]`);

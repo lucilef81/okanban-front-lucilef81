@@ -129,8 +129,18 @@
         <div class="box">
             <div class="columns">
                 <div class="column card-name"></div>
+                <form action="" method="POST" class="is-hidden">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input type="text" class="input is-small" name="title" value="" placeholder="Titre de la carte">
+                        </div>
+                        <div class="control">
+                            <button class="button is-small is-success">Valider</button>
+                        </div>
+                    </div>
+                </form>
                 <div class="column is-narrow">
-                    <a href="#">
+                    <a href="#" class="edit-card">
                         <span class="icon is-small has-text-primary">
                             <i class="fas fa-pencil-alt"></i>
                         </span>
