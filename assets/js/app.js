@@ -79,6 +79,57 @@ var app = {
     }
   },
 
+  // afficher le formulaire d'édition du nom d'une liste
+  showEditListForm: (event) => {
+    // récupérer tous les éléments (en partant du titre sur lequel on a double cliqué sinon, on est pas sûr.e d'avoir la bonne liste)
+    let listElement = event.target.closest('.panel');
+    let formElement = listElement.querySelector('form');
+
+    // mettre la valeur existante dans l'input
+    formElement.querySelector('input[name="name"]').value = event.target.textContent;
+
+    // afficher/masquer
+    event.target.classList.add('is-hidden');
+    formElement.classList.remove('is-hidden');
+    
+  },
+
+  // formulaire d'édition du nom d'une liste
+  handleEditListForm: async (event) => {
+    event.preventDefault();
+
+    // récupérer les données
+    let data = new FormData(event.target);
+
+    console.table(Array.from(data));
+    // récupérer l'id de la liste
+    let listElement = event.target.closest('.panel');
+    const listId = listElement.dataset.listId;
+    //appeler l'API
+    try {
+      let response = await fetch(app.baseUrl+'/lists/'+listId,{
+        method: "PATCH",
+        body: data
+      });
+      if (response.status !== 200) {
+        let error = await response.json();
+        throw error;
+      } else {
+        let list = await response.json();
+        // on met à jour le h2
+        listElement.querySelector('h2').textContent = list.name;
+      }
+    } catch (error) {
+      alert("Impossible de modifier la liste");
+      console.error(error);
+    }
+    // quoi qu'il se passe, on cache le formulaire
+    event.target.classList.add('is-hidden');
+    // et on réaffiche le <h2>
+    listElement.querySelector('h2').classList.remove('is-hidden');
+  },
+
+
   handleAddListForm: async (event) => {
     // empêcher d'envoyer vraiment le formulaire (ça rechargerait la page)
     event.preventDefault();
@@ -148,6 +199,11 @@ var app = {
     newList.querySelector('h2').textContent = listName;
 
     newList.querySelector('.add-card-button').addEventListener('click', app.showAddCardModal);
+    // 2 nouveaux écouteurs sur chaque liste
+    // le double clic sur le nom, pour passer de l'affichage à l'édition
+    // l'envoi du formulaire, pour repasser de l'édition à l'affichage
+    newList.querySelector('h2').addEventListener('dblclick', app.showEditListForm);
+    newList.querySelector('form').addEventListener('submit', app.handleEditListForm);
 
     // à terme, l'API se chargera d'attribuer un id à une nouvelle liste
     // pour l'instant, on va prendre une valeur aléatoire
