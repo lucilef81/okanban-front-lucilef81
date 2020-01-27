@@ -65,7 +65,7 @@ var app = {
     // pour en déduire l'id de la liste à laquelle on ajoute une carte
     let listId = clickedButton.closest('.panel').dataset.listId;
 
-    let listIdInput = modal.querySelector('input[name="list_id"]');
+    let listIdInput = modal.querySelector('input[name="listId"]');
 
     listIdInput.value = listId;
 
@@ -84,7 +84,7 @@ var app = {
     event.preventDefault();
 
     let data = new FormData(event.target);
-    data.set('position', 99);
+    data.set('position', 99); // position fictive, parce qu'il en faut une
 
     // on utilise toujours fetch, quelle que soit la méthode
     let response = await fetch(app.baseUrl + '/lists', {
@@ -112,12 +112,29 @@ var app = {
     app.hideModals();
   },
 
-  handleAddCardForm: (event) => {
+  handleAddCardForm: async (event) => {
     event.preventDefault();
 
     let data = new FormData(event.target);
+    data.set('position', 99); // pareil, faut une position, on en prend une arbitrairement
 
-    app.makeCardInDOM(data.get('title'), data.get('list_id'));
+    // pour tester le contenu du FormData
+    //console.table(Array.from(data));
+
+    let response = await fetch(app.baseUrl + '/cards', {
+      method: 'POST',
+      body: data
+    });
+
+    if (response.ok) {
+      let card = await response.json();
+      // les infos envoyées et les infos véritablement enregistrées en BDD côté back peuvent être légèrement différentes
+      // on va donc se baser sur les valeurs reçues en réponse
+      app.makeCardInDOM(card.title, card.list_id, card.id, card.color);
+    } else {
+      let errors = await response.json();
+      console.log(errors);
+    }
 
     app.hideModals();
   },
