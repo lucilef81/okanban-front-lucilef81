@@ -241,3 +241,5 @@ const tagModule = {
     document.getElementById('addAndEditTagModal').classList.remove('is-active');
   }
 };
+
+module.exports = tagModule;

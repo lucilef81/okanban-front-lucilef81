@@ -1,3 +1,5 @@
+const tagModule = require('./tag');
+
 const cardModule = {
   base_url: null,
 
@@ -157,3 +159,5 @@ const cardModule = {
   }
 
 };
+
+module.exports = cardModule;

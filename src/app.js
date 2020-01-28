@@ -1,4 +1,6 @@
-
+const listModule = require('./list');
+const cardModule = require('./card');
+const tagModule = require('./tag');
 // on objet qui contient des fonctions
 var app = {
   // l'url "de base" de notre api !

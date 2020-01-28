@@ -1,3 +1,5 @@
+const cardModule = require('./card');
+
 const listModule = {
   base_url: null,
 
@@ -175,3 +177,6 @@ const listModule = {
   }
 
 };
+
+
+module.exports = listModule;

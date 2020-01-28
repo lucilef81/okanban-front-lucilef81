@@ -1,0 +1,23 @@
+{
+  "name": "okanban-front-lucilef81",
+  "version": "1.0.0",
+  "description": "## Bundle Pour pouvoir créer un bundle il nous faut 2 choses :  - installer un \"bundlizer\" (on va utiliser browserify) - utiliser `module.exports` et `require` pour \"faire le lien\" entre les modules !",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/O-clock-Zenith/okanban-front-lucilef81.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/O-clock-Zenith/okanban-front-lucilef81/issues"
+  },
+  "homepage": "https://github.com/O-clock-Zenith/okanban-front-lucilef81#readme",
+  "dependencies": {
+    "browserify": "^16.5.0"
+  }
+}
