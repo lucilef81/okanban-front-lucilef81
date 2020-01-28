@@ -1,3 +1,23 @@
+# oKanban-front, jour 5
+
+## Bundle
+Pour pouvoir créer un bundle il nous faut 2 choses : 
+- installer un "bundlizer" (on va utiliser browserify)
+- utiliser `module.exports` et `require` pour "faire le lien" entre les modules !
+
+On déplace aussi nos fichiers dans un nouveau dossier "src" (par convention).
+
+## Installer et utiliser Browserify
+- `npm init -y`
+- `npm install browserify`
+- `npx browserify -e src/app.js -o assets/js/bundle.js`
+
+Non, ce n'est pas une erreur, c'est bien `npx` : ça sert à lancer directement un module depuis la ligne de commande! très pratique !
+
+On donne à browserify un point d'entrée (-e) et un fichier de sortie (-o). Ensuite il "suit" les `require` pour savoir quel fichier embarquer !
+
+---
+
 # oKanban-front, jours 3 et 4
 
 On continue de coder les fonctionalités de notre application !
