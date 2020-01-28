@@ -18,8 +18,6 @@
             </h1>
             <div class="columns">
 
-                <!-- la nouvelle liste doit s'insérer ici -->
-
                 <div class="column">
                     <button class="button is-success" id="addListButton">
                         <span class="icon is-small">
@@ -27,13 +25,21 @@
                         </span>
                         &nbsp; Ajouter une liste
                     </button>
+                    <br>
+                    <br>
+                    <button class="button is-success" id="editTagsButton">
+                        <span class="icon is-small">
+                            <i class="fas fa-pencil-alt"></i>
+                        </span>
+                        &nbsp; Gérer les tags
+                    </button>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- modale ajout de liste -->
+    <!-- Les modales -->
     <div class="modal" id="addListModal">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -58,7 +64,6 @@
         </div>
     </div>
 
-    <!-- modale ajout de carte -->
     <div class="modal" id="addCardModal">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -72,8 +77,14 @@
                         <label class="label">Titre</label>
                         <div class="control">
                             <input type="text" class="input" name="title" value="" placeholder="Titre de la carte">
+                            <input type="hidden" name="list_id">
                         </div>
-                        <input type="hidden" name="listId">
+                    </div>
+                    <div class="field">
+                        <label for="cardColor" class="label">Couleur</label>
+                        <div class="control">
+                            <input class="input" type="color" name="color" id="cardColor">
+                        </div>
                     </div>
                 </section>
                 <footer class="modal-card-foot">
@@ -84,18 +95,73 @@
         </div>
     </div>
 
+    <div class="modal" id="associateTagModal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Ajouter un tag à la carte</p>
+                <button class="delete close" type="button" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button close" type="button">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+    <div class="modal" id="addAndEditTagModal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Gérer les tags</p>
+                <button class="delete close" type="button" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="editTagForms">
+
+                </div>
+                <hr>
+                <label for="" class="label">Nouveau tag :</label>
+                <form action="" id="newTagForm">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input type="text" class="input is-small" name="title" value="" placeholder="Titre du tag">
+                        </div>
+                        <div class="control">
+                            <input type="color" class="input is-small input-color" name="color" value="#000000">
+                        </div>
+                        <div class="control">
+                            <button class="button is-small is-success">Valider</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button close" type="button">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
     <!-- Chargement de mon fichier JS -->
     <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/list.js"></script>
+    <script src="./assets/js/card.js"></script>
+    <script src="./assets/js/tag.js"></script>
 
-    <!-- templates -->
+    <!-- Le plugin SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
-    <template id="tpl-list">
+
+    <!-- Mes templates -->
+    <template id="template-list">
         <!-- list -->
-        <div class="column is-one-quarter panel">
+        <div class="column is-one-quarter panel" list-id="A">
             <div class="panel-heading has-background-info">
                 <div class="columns">
                     <div class="column">
-                        <h2 class="has-text-white"></h2>
+                        <h2 class="has-text-white">Perso</h2>
 
                         <form action="" method="POST" class="is-hidden">
                             <input type="hidden" name="list-id" value="1">
@@ -111,24 +177,33 @@
                     </div>
 
                     <div class="column is-narrow">
-                        <a href="#" class="is-pulled-right add-card-button">
+                        <a href="#" class="button--add-card">
                             <span class="icon is-small has-text-white">
                                 <i class="fas fa-plus"></i>
+                            </span>
+                        </a>
+                        <a href="#" class="button--delete-list">
+                            <span class="icon is-small has-text-white">
+                                <i class="fas fa-trash-alt"></i>
                             </span>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="panel-block is-block has-background-light"></div>
+            <div class="panel-block is-block has-background-light">
+                
+            </div>
         </div>
         <!--/ list -->
     </template>
-
-    <template id="tpl-card">
+    <template id="template-card">
         <!-- card -->
-        <div class="box">
+        <div class="box" card-id="M">
             <div class="columns">
-                <div class="column card-name"></div>
+                <div class="column card-name">
+                    Brancher l'API
+                </div>
+
                 <form action="" method="POST" class="is-hidden">
                     <div class="field has-addons">
                         <div class="control">
@@ -137,24 +212,37 @@
                         <div class="control">
                             <button class="button is-small is-success">Valider</button>
                         </div>
+                        <div class="control">
+                            <input type="color" class="input is-small input-color" name="color" value="#000000">
+                        </div>
                     </div>
                 </form>
+
+
                 <div class="column is-narrow">
-                    <a href="#" class="edit-card">
+                    <a href="#" class="button--edit-card">
                         <span class="icon is-small has-text-primary">
                             <i class="fas fa-pencil-alt"></i>
                         </span>
                     </a>
-                    <a href="#">
+                    <a href="#" class="button--delete-card">
                         <span class="icon is-small has-text-danger">
                             <i class="fas fa-trash-alt"></i>
                         </span>
                     </a>
                 </div>
             </div>
+            <div class="columns tags">
+                <a href="#" class="button--add-tag">
+                    <span class="icon is-small">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                </a>
+            </div>
         </div>
         <!--/ card -->
     </template>
+
 </body>
 
 </html>

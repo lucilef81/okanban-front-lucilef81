@@ -1,5 +1,9 @@
 body {
   background-color: #ccc;
   height: 100vh;
-  overflow-x: auto;
+}
+
+.input-color {
+  padding: 0;
+  width: 20px;
 }
